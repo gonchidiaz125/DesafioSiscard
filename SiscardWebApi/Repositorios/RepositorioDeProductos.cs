@@ -40,6 +40,35 @@ namespace SiscardWebApi.Repositorios
 			return producto;
 		}
 
+		public IEnumerable<Producto> ObtenerTodosLosProductos() 
+		{
+			List<Producto> productos = new List<Producto>();
+			using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                conexion.Open();
+				using (SqlCommand comando = new SqlCommand("SELECT Id, Nombre, Descripcion, Codigo, Precio FROM Productos", conexion)) 
+				{
+					using (SqlDataReader leer  = comando.ExecuteReader())
+					{
+						while (leer.Read())
+						{
+							var producto = new Producto
+							{
+								Id = Convert.ToInt32(leer["Id"]),
+								Nombre = Convert.ToString(leer["Nombre"]),
+								Descripcion = Convert.ToString(leer["Descripcion"]),
+								Codigo = Convert.ToString(leer["Codigo"]),
+								Precio = Convert.ToDecimal(leer["Precio"]),
+							};
+							productos.Add(producto);
+						}
+					}
+
+				}
+			}
+			return productos;
+		}
+
 		public int Crear(Producto producto)
 		{
 			int idInsertado = 0;

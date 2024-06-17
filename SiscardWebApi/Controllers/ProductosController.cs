@@ -27,7 +27,14 @@ namespace SiscardWebApi.Controllers
 			return Ok(producto);
 		}
 
-		[HttpPost]
+        [HttpGet]
+        public ActionResult<IEnumerable<Producto>> Get()
+        {
+            List<Producto> productos = logicaDeProductos.ObtenerTodosLosProductos().ToList();
+            return Ok(productos);
+        }
+
+        [HttpPost]
 		public IActionResult Crear([FromBody] Producto producto)
 		{
 			try

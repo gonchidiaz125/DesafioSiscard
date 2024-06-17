@@ -16,8 +16,12 @@ namespace SiscardWebApi.Logica
 		{
 			return repositorioDeProductos.ObtenerPorId(id);
 		}
+        public IEnumerable<Producto> ObtenerTodosLosProductos()
+        {
+            return repositorioDeProductos.ObtenerTodosLosProductos();
+        }
 
-		public int Crear(Producto producto)
+        public int Crear(Producto producto)
 		{
 			if (producto == null) {
 				throw new ArgumentException("Error al crear un producto. El paramétro producto es null");
