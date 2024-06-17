@@ -55,6 +55,26 @@ namespace SiscardWebApi.Controllers
 			}
 			
 		}
+		[HttpPut]
+		public IActionResult Actualizar([FromBody] Producto producto)
+		{
 
-	}	
+			try
+			{
+				var id = logicaDeProductos.Actualizar(producto);
+
+				return Ok(id);
+
+			}
+			catch (ArgumentException ex)
+			{
+				return BadRequest(new { mensaje = ex.Message });
+			}
+            catch (Exception ex) 
+			{
+				return StatusCode(500, new { mensaje = "Error inesperado", detalle = ex.Message });
+			}
+        }
+
+    }	
 }

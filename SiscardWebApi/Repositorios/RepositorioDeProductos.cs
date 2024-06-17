@@ -88,5 +88,60 @@ namespace SiscardWebApi.Repositorios
 			return idInsertado;
 		}
 
-	}
+		public bool Actualizar(Producto producto)
+		{
+			bool resultado = false;
+			using (SqlConnection conexion = new SqlConnection(connectionString)) 
+			{
+                string consulta = "UPDATE Productos SET Nombre = @Nombre, Descripcion = @Descripcion, Codigo = @Codigo, Precio = @Precio WHERE Id = @Id";
+                SqlCommand comandoSql = new SqlCommand(consulta, conexion);
+                comandoSql.Parameters.AddWithValue("@Nombre", producto.Nombre);
+                comandoSql.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                comandoSql.Parameters.AddWithValue("@Codigo", producto.Codigo);
+                comandoSql.Parameters.AddWithValue("@Precio", producto.Precio);
+                comandoSql.Parameters.AddWithValue("@Id", producto.Id);
+                conexion.Open();
+                resultado = comandoSql.ExecuteNonQuery() == 1 ? true : false;
+
+            }
+
+				return resultado;
+		}
+
+        public IEnumerable<Producto> ObtenerPorCodigoDeProducto(string Codigo)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                conexion.Open();
+
+                using (SqlCommand comandoSql = new SqlCommand("SELECT Id, Nombre, Descripcion, Codigo, Precio FROM Productos WHERE Codigo = @Codigo", conexion))
+                {
+                    comandoSql.Parameters.AddWithValue("@Codigo", Codigo);
+
+                    using (SqlDataReader leer = comandoSql.ExecuteReader())
+                    {
+                        while (leer.Read())
+                        {
+                            var producto = new Producto
+                            {
+                                Id = Convert.ToInt32(leer["Id"]),
+                                Nombre = Convert.ToString(leer["Nombre"]),
+                                Descripcion = Convert.ToString(leer["Descripcion"]),
+                                Codigo = Convert.ToString(leer["Codigo"]),
+                                Precio= Convert.ToDecimal(leer["Precio"]),
+
+                            };
+
+                            productos.Add(producto);
+                        }
+                    }
+                }
+            }
+
+            return productos;
+        }
+
+    }
 }
