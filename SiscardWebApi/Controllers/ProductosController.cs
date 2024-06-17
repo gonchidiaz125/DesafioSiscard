@@ -27,5 +27,27 @@ namespace SiscardWebApi.Controllers
 			return Ok(producto);
 		}
 
+		[HttpPost]
+		public IActionResult Crear([FromBody] Producto producto)
+		{
+			try
+			{
+				var id = logicaDeProductos.Crear(producto);
+				// devuelvo al front-end el Id del producto creado
+				return Ok(id);
+			}
+			catch (ArgumentException ex)
+			{
+				// Devuelve un 400 Bad Request con el mensaje de error
+				return BadRequest(new { mensaje = ex.Message });
+			}
+			catch (Exception ex)
+			{
+				// Devuelve un 500 Internal Server Error para otros tipos de errores
+				return StatusCode(500, new { mensaje = "Error inesperado", detalle = ex.Message });
+			}
+			
+		}
+
 	}	
 }

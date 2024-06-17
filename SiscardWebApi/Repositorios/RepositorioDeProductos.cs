@@ -13,15 +13,15 @@ namespace SiscardWebApi.Repositorios
 		public Producto ObtenerPorId(int id)		{
 			Producto producto = null;
 
-			using (SqlConnection connection = new SqlConnection(connectionString))
+			using (SqlConnection conexion = new SqlConnection(connectionString))
 			{
-				connection.Open();
+				conexion.Open();
 
-				using (SqlCommand command = new SqlCommand("SELECT Id, Nombre, Descripcion, Codigo, Precio FROM Productos WHERE Id = @Id", connection))
+				using (SqlCommand comando = new SqlCommand("SELECT Id, Nombre, Descripcion, Codigo, Precio FROM Productos WHERE Id = @Id", conexion))
 				{
-					command.Parameters.AddWithValue("id", id);
+					comando.Parameters.AddWithValue("id", id);
 
-					using (SqlDataReader reader = command.ExecuteReader())
+					using (SqlDataReader reader = comando.ExecuteReader())
 					{
 						if (reader.Read())
 						{
@@ -38,6 +38,25 @@ namespace SiscardWebApi.Repositorios
 				}
 			}
 			return producto;
+		}
+
+		public int Crear(Producto producto)
+		{
+			int idInsertado = 0;
+			using (SqlConnection conexion = new SqlConnection(connectionString))
+			{
+				
+				var sql = "INSERT INTO productos (Nombre, Descripcion, Codigo, Precio ) VALUES (@Nombre, @Descripcion, @Codigo, @Precio); SELECT SCOPE_IDENTITY();";
+				SqlCommand comandoSql = new SqlCommand(sql, conexion);
+				comandoSql.Parameters.AddWithValue("@Nombre", producto.Nombre);
+				comandoSql.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+				comandoSql.Parameters.AddWithValue("@Codigo", producto.Codigo);
+				comandoSql.Parameters.AddWithValue("@Precio", producto.Precio);
+				conexion.Open();
+				// Ejecuto el SQL esperando que retorne un solo valor (el valor identity del producto inserado)
+				idInsertado = Convert.ToInt32(comandoSql.ExecuteScalar());
+			}
+			return idInsertado;
 		}
 
 	}
