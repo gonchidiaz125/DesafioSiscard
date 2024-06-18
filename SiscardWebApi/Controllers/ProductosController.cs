@@ -76,5 +76,20 @@ namespace SiscardWebApi.Controllers
 			}
         }
 
+
+        [HttpDelete("{id}")]
+        public IActionResult Borrar(int id)
+        {
+            var resultado = logicaDeProductos.Borrar(id);
+            if (resultado)
+            {
+                return Ok(); // Devuelve 200 OK si el resultado es verdadero
+            }
+            else
+            {
+                return StatusCode(500); // Devuelve error 500 si el resultado es falso
+            }
+        }
+
     }	
 }

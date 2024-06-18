@@ -99,5 +99,10 @@ namespace SiscardWebApi.Logica
             return repositorioDeProductos.Actualizar(producto);
         }
 
+        public bool Borrar(int id)
+        {
+            return repositorioDeProductos.Borrar(id);
+        }
+
     }
 }

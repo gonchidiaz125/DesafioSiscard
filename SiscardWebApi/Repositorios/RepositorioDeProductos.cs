@@ -143,5 +143,21 @@ namespace SiscardWebApi.Repositorios
             return productos;
         }
 
+		public bool Borrar(int id) 
+		{
+			bool resultado = false;
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+				string consulta = "DELETE FROM Productos WHERE Id = @Id";
+                SqlCommand comandoSql = new SqlCommand(consulta, conexion);
+                comandoSql.Parameters.AddWithValue("@Id", id);
+				conexion.Open();
+                int rowsAffected = comandoSql.ExecuteNonQuery();
+                resultado = rowsAffected == 1;
+
+            }
+			return resultado;
+		}
+
     }
 }
